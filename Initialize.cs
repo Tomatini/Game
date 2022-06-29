@@ -1,15 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 
-public class Initialize : Basic_Date
+public class Initialize : Basic_Data
 {
     bool isNumber = false;
-
+    int actualRound = 0;
+    Choices[] choices= new Choices[3];
+    
     public Initialize()
 	{
+        //CreateTableChoices();
         GameLoop();
-	}
-
+    }
+    public void CreateTableChoices()
+    {
+        Choices Rock = new Choices("Rock");
+        Choices Paper = new Choices("Paper");
+        Choices Shears = new Choices("Shears");
+        choices[0] = Rock;
+        choices[1] = Paper;
+        choices[2] = Shears;
+        Console.WriteLine(Rock.EqualWithOther(Paper));
+    }
     public void  GameLoop()
     {
         while (finish_game == false)
@@ -20,12 +32,15 @@ public class Initialize : Basic_Date
             read_user_name = Console.ReadLine();
             CheckName(read_user_name);
 
-            Console.Clear();
-            Console.WriteLine("Your choice :\nStone, paper or shears?");
-            read_user_choice = Console.ReadLine();
-            read_user_choice=CheckChoiceGame(read_user_choice,GenerateListAvailableWord());
-
-            Console.WriteLine("Your choice: "+read_user_choice);
+            while (finish_game == false)
+            {
+                
+                Console.WriteLine("Your choice :\nStone, paper or shears?");
+                read_user_choice = Console.ReadLine();
+                CheckChoiceGame(read_user_choice, GenerateListAvailableWord());
+                Console.Clear();
+                Console.WriteLine("Your choice:\t Computer choice: \n  " + read_user_choice+"\t\t   computer choice");
+            }
             finish_game = true;
         }
 
@@ -56,21 +71,26 @@ public class Initialize : Basic_Date
             }
         }
     }
-    public override string CheckChoiceGame(string inputUser, List<string>list)
+    public override string CheckChoiceGame(string inputUser, Dictionary<string,string>list)
     {
         string check = "";
         int loop = 0;
+        inputUser = inputUser.ToLower();
         while (check =="")
         {
             if (loop == 1)
             {
                 Console.Clear();
                 Console.WriteLine("Wrong word. Try again.\nYour choice :\nStone, paper or shears?");
-                inputUser = Console.ReadLine();
+                inputUser = Console.ReadLine().ToLower();
             }
-            foreach (string word in list)
+            foreach (KeyValuePair<string, string> word in list)
             {
-                if (word == inputUser)
+                if(inputUser == "status")
+                {
+                    Status();
+                }
+                else if (word.Key == inputUser)
                 {
                     Console.Clear();
                     check = inputUser;
@@ -87,14 +107,23 @@ public class Initialize : Basic_Date
         return check;
     }
 
-    public override List<string> GenerateListAvailableWord()
+    public override Dictionary<string,string> GenerateListAvailableWord()
     {
-        List<string> ExampleList= new List<string> { "stone", "kamien" , "paper","status" }; 
-        ExampleList.Add("papier");
-        ExampleList.Add("shears");
-        ExampleList.Add("nozyce");
+        Dictionary<string, string> ExampleList = new Dictionary<string, string>() ;// { "stone", "kamien" , "paper","status" }; 
+        ExampleList.Add("papier", "Paper");
+        ExampleList.Add("paper", "Paper");
+        ExampleList.Add("stone", "Rock");
+        ExampleList.Add("status","status");
+        ExampleList.Add("kamien", "Rock");
+        ExampleList.Add("shears", "Shears");
+        ExampleList.Add("nozyce", "Shears");
 
         return ExampleList;
     }
 
+    public override void Status()
+    {
+        Console.WriteLine(actualRound);
+        throw new NotImplementedException();
+    }
 }
