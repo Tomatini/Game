@@ -8,9 +8,8 @@ public abstract class Basic_Data
 	protected int userWin = 0;
 	protected int userLose = 0;
 	protected int userDraw = 0;
+	protected string messageForUser="";
 	public abstract string CheckChoiceGame(string input, Dictionary<string,string> list);
-	public abstract Dictionary<string,string> GenerateListAvailableWord();
-	public abstract bool CheckName(string name);
 	public abstract void Status();
 
 }

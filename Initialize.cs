@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 public class Initialize : Basic_Data
 {
-    bool isNumber = false;
     Choices[] choices = new Choices[4];
     string computerChoice = "";
     int random = 0;
-
+    Validation validation = new Validation();
     public Initialize()
     {
+        
         CreateTableChoices();
         GameLoop();
     }
@@ -32,7 +32,7 @@ public class Initialize : Basic_Data
             Console.WriteLine("Rock, paper or shears? \nPlease write your name:");
 
             read_user_name = Console.ReadLine();
-            CheckName(read_user_name);
+            read_user_name = validation.CheckNameWhile(read_user_name);
 
             while (finish_game == false)
             {
@@ -40,7 +40,7 @@ public class Initialize : Basic_Data
                 read_user_choice = Console.ReadLine();
                 CheckStatus();
              
-                CheckChoiceGame(read_user_choice, GenerateListAvailableWord());
+                CheckChoiceGame(read_user_choice, validation.GenerateListAvailableWord());
                 Console.Clear();
                 CheckStatus();
                
@@ -49,48 +49,27 @@ public class Initialize : Basic_Data
                 computerChoice = choices[random].choice;
                 Console.WriteLine(read_user_name + " choice:\t Computer choice: \n  " + choices[3].choice + "\t\t   " + computerChoice + "\n");
                 SumResults(choices[3].EqualWithOther(choices[random]));
+                Console.WriteLine(messageForUser+"\n");
 
             }
             finish_game = true;
         }
 
     }
+   
     private void SumResults(int result)
     {
         switch (result)
         {
             case -1: userLose += 1;
+                messageForUser = read_user_name+" you lose this round";
                 break;
             case 0: userDraw += 1;
+                messageForUser = read_user_name + " you draw";
                 break;
             case 1: userWin += 1;
+                messageForUser = read_user_name + " you win this round";
                 break;
-        }
-    }
-    public override bool CheckName(string name)
-    {
-        WhetherNameContainsNumber(name);
-        while (String.IsNullOrEmpty(name) || isNumber == true || name.Length > 20)
-        {
-            isNumber = false;
-            Console.WriteLine("Wrong name " + read_user_name + ".\nName must be not empty, max 20 char and no have number.\nPlease write your name:");
-            name = Console.ReadLine();
-            WhetherNameContainsNumber(name);
-        }
-        read_user_name = name;
-
-        return true;
-    }
-    public void WhetherNameContainsNumber(string name)
-    {
-
-        for (int i = 0; i < name.Length; i++)
-        {
-            if (char.IsDigit(name[i]))
-            {
-                isNumber = true;
-                break;
-            }
         }
     }
     public override string CheckChoiceGame(string inputUser, Dictionary<string, string> list)
@@ -147,20 +126,6 @@ public class Initialize : Basic_Data
 
         }
         return check;
-    }
-
-    public override Dictionary<string, string> GenerateListAvailableWord()
-    {
-        Dictionary<string, string> ExampleList = new Dictionary<string, string>();
-        ExampleList.Add("papier", "Paper");
-        ExampleList.Add("paper", "Paper");
-        ExampleList.Add("rock", "Rock");
-        // ExampleList.Add("status","status");
-        ExampleList.Add("kamien", "Rock");
-        ExampleList.Add("shears", "Shears");
-        ExampleList.Add("nozyce", "Shears");
-
-        return ExampleList;
     }
     private void CheckStatus()
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-public class Choices
+public class Choices : IChoice
 {
 	public string choice { get; set; }
 	public Choices(string choice)
@@ -30,6 +30,6 @@ public class Choices
                     break;
             }
         }
-                return 0;
+                return -2;
     }
 }
